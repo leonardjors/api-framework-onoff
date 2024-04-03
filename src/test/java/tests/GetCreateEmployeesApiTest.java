@@ -7,8 +7,8 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsNot.not;
 
-public class getEmployeesApiIT {
-    private String authToken;
+public class GetCreateEmployeesApiTest {
+    private String accessToken;
 
     @Test
     public void getEmployeesReturn200() {
@@ -17,7 +17,7 @@ public class getEmployeesApiIT {
         String requestBody = "{\"email\": \"leonard+b2bautomation@onoffapp.com\", \"password\": \"123456Ai\"}, \"recaptchaToken\": \"0539b06a-1cbe-45b5-9396-45684f8443b8\"}";
 
         // Send POST request to login endpoint and retrieve authentication token
-        authToken = given()
+        accessToken = given()
                 .header("Content-Type", "application/json")
                 .body(requestBody)
                 .when()
@@ -28,12 +28,12 @@ public class getEmployeesApiIT {
                 .path("body.accessToken");
 
 // Make sure accessToken is not null
-        if (authToken == null) {
+        if (accessToken == null) {
             throw new RuntimeException("Access token is null. Login test might have failed.");
         }
 
         given()
-                .header("Authorization", "Bearer " + authToken)
+                .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .get("/get-employees")
                 .then()
@@ -48,7 +48,7 @@ public class getEmployeesApiIT {
         String requestBody = "{\"email\": \"leonard+180124@onoffapp.com\", \"password\": \"123456Ai\"}, \"recaptchaToken\": \"0539b06a-1cbe-45b5-9396-45684f8443b8\"}";
 
         // Send POST request to login endpoint and retrieve authentication token
-        authToken = given()
+        accessToken = given()
                 .header("Content-Type", "application/json")
                 .body(requestBody)
                 .when()
@@ -58,12 +58,12 @@ public class getEmployeesApiIT {
                 .extract()
                 .path("body.accessToken");
 
-        if (authToken == null) {
+        if (accessToken == null) {
             throw new RuntimeException("Access token is null. Login test might have failed.");
         }
 
         given()
-                .header("Authorization", "Bearer " + authToken)
+                .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .get("/get-employees")
                 .then()

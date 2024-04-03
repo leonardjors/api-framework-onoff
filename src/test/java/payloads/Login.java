@@ -5,28 +5,46 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Login {
 
     @JsonProperty
-    private static String username = "leonard@onoffapp.com";
+    private String email;
     @JsonProperty
-    private static String password = "123456Ai";
+    private String password;
     @JsonProperty
-    private static String recaptchaToken = "0539b06a-1cbe-45b5-9396-45684f8443b8";
+    private String recaptchaToken;
 
-    public Login(String username, String password, String recaptchaToken) {
-        Login.username = username;
-        Login.password = password;
-        Login.recaptchaToken = recaptchaToken;
-    }
-
-    // Getters
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public String getRecaptchaToken() {
-        return recaptchaToken;
+    private Login(String email, String password, String recaptchaToken) {
+        this.email = email;
+        this.password = password;
+        this.recaptchaToken = recaptchaToken;
+    }
+
+    // Static builder class
+    public static class Builder {
+
+        private String email;
+        private String password;
+
+        public Builder setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder setPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+
+        public Login build() {
+            String recaptchaToken = "0539b06a-1cbe-45b5-9396-45684f8443b8";
+            return new Login(email, password, recaptchaToken);
+        }
     }
 }
