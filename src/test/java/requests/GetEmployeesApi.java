@@ -2,19 +2,18 @@ package requests;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import payloads.Login;
 
 import static io.restassured.RestAssured.given;
 
-public class LogoutApi extends BaseApi {
-    private static final String apiUrlLogout = baseUrl + "logout";
+public class GetEmployeesApi extends BaseApi {
 
-    public static Response logout(String accessToken) {
+    public static final String getEmployeesEndpoint = baseUrl + "get-employees";
+
+    public static Response getEmployees(String accessToken) {
         return given()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .when()
-                .post(apiUrlLogout);
+                .get(getEmployeesEndpoint);
     }
 }
-

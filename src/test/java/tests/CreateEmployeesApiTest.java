@@ -1,9 +1,7 @@
 package tests;
 
 import io.restassured.response.Response;
-import org.apache.groovy.json.internal.NumberValue;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import payloads.Employees;
 import payloads.Login;
@@ -11,7 +9,6 @@ import requests.CreateEmployeesApi;
 import requests.LoginApi;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,7 +17,7 @@ public class CreateEmployeesApiTest {
 
     private static String accessToken;
 
-    @BeforeEach
+    @BeforeAll
     public static void setup() {
         // Perform login to get the access token
         Login loginPayload = new Login.Builder()
@@ -71,6 +68,16 @@ public class CreateEmployeesApiTest {
     public void testCreateEmployeeWithTooLongData() {
         String longString = new String(new char[1001]).replace('\0', 'a');
         Employees.Employee employee = new Employees.Employee(longString, longString, longString + "@onoffapp.com");
+        Employees employeesPayload = new Employees(Arrays.asList(employee));
+
+        Response response = CreateEmployeesApi.createEmployees(accessToken, employeesPayload);
+
+        assertEquals(400, response.statusCode());
+    }
+
+    @Test
+    public void testCreateEmployeeWithEmailInUse() {
+        Employees.Employee employee = new Employees.Employee("Leonard", "Test", "leonard@b2b-automation@onoffapp.com"); //email in use
         Employees employeesPayload = new Employees(Arrays.asList(employee));
 
         Response response = CreateEmployeesApi.createEmployees(accessToken, employeesPayload);

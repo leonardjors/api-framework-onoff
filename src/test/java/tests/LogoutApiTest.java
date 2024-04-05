@@ -1,59 +1,46 @@
 package tests;
 
-import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import payloads.Login;
+import requests.GetEmployeesApi;
+import requests.LoginApi;
+import requests.LogoutApi;
 
-import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LogoutApiTest {
-    private String authToken;
 
-    @Test
-    public void postLogoutFromAccountReturn200() {
-        RestAssured.baseURI = "https://b2b-staging.onoffapp.net/b2b-console";
+    private static String accessToken;
 
-        // Define request body for login
-        String requestBody = "{\"email\": \"leonard+b2bautomation@onoffapp.com\", \"password\": \"123456Ai\"}, \"recaptchaToken\": \"0539b06a-1cbe-45b5-9396-45684f8443b8\"}";
+    @BeforeAll
+    public static void setup() {
+        // Perform login to get the access token
+        Login loginPayload = new Login.Builder()
+                .setEmail("leonard+b2bautomation@onoffapp.com")
+                .setPassword("123456Ai")
+                .build();
+        Response loginResponse = LoginApi.postLogin(loginPayload);
+        loginResponse.then().log().all();
 
-        // Send POST request to login endpoint and retrieve authentication token
-        authToken = given()
-                .header("Content-Type", "application/json")
-                .body(requestBody)
-                .when()
-                .post("/login")
-                .then()
-                .statusCode(200)
-                .extract()
-                .path("body.accessToken");
-
-
-        // Make sure authToken is not null
-        if (authToken == null) {
-            throw new RuntimeException("Authentication token is null. Login test might have failed.");
-        }
-
-        // Send POST request to logout endpoint with authentication token
-        given()
-                .header("Authorization", "Bearer " + authToken)
-                .when()
-                .post("/logout")
-                .then()
-                .statusCode(200);
+        accessToken = loginResponse.path("body.accessToken");
+        assertNotNull(accessToken, "Access token was not received");
     }
 
     @Test
-    public void postLogoutFromAlreadyLoggedOutReturn400() {
-        RestAssured.baseURI = "https://b2b-staging.onoffapp.net/b2b-console";
+    public void testSessionTerminationAfterLogout() {
+        // Ensure logged in
+        assertTrue(accessToken != null && !accessToken.isEmpty(), "Failed to log in");
 
+        // Logout
+        Response logoutResponse = LogoutApi.logout(accessToken);
+        assertEquals(200, logoutResponse.statusCode(), "Logout failed");
 
+        // Attempt to access account data using the same access token
+        Response accountDataResponse = GetEmployeesApi.getEmployees(accessToken);
 
-        // Send POST request to logout endpoint with authentication token
-        given()
-                .header("Authorization", "Bearer " + authToken)
-                .when()
-                .post("/logout")
-                .then()
-                .statusCode(400);
+        // Verify that access is denied
+        assertTrue(accountDataResponse.statusCode() == 401, "Session was not correctly terminated after logout");
     }
-
 }

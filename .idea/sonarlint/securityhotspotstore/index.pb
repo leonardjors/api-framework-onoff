@@ -46,3 +46,15 @@ b
 .src/test/java/requests/CreateEmployeesApi.java,b/2/b2e8ffbb0adcf7828781171130c4ebad738f63d4
 ^
 .src/test/java/tests/RemoveEmployeeApiTest.java,4/6/462fd9fe78070cd9ed8220e0ddc021230e37aae4
+[
++src/test/java/requests/getEmployeesApi.java,0/e/0e468f06f5af916a50cae6fb84997d538e8dfab3
+\
+,src/test/java/tests/GetEmployeesApiTest.java,3/0/3061e5674816fe16c8101638abf230ca464db71b
+[
++src/test/java/requests/GetEmployeesApi.java,a/5/a5bd4468100c9d8a9a7f9956129e2f7e316dd04f
+]
+-src/test/java/payloads/EmployeesResponse.java,c/0/c06c1c232f86c24ca9054230f631e8dcbcdb0282
+]
+-src/test/java/requests/removeEmployeeApi.java,7/3/734ea3045945410f98895b2ec73dec928473b38e
+]
+-src/test/java/requests/RemoveEmployeeApi.java,1/7/17a55d85fcf4fec5b1f5eb07e4dd5cb4fb3c5774
