@@ -41,6 +41,6 @@ public class LogoutApiTest {
         Response accountDataResponse = GetEmployeesApi.getEmployees(accessToken);
 
         // Verify that access is denied
-        assertTrue(accountDataResponse.statusCode() == 401, "Session was not correctly terminated after logout");
+        assertEquals(401, accountDataResponse.statusCode(), "Session was not correctly terminated after logout");
     }
 }
