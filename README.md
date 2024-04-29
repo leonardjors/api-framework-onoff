@@ -1,1 +1,1 @@
-API test automation project for EEK
+API test automation project for EEK thesis
